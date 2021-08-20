@@ -1,0 +1,276 @@
+// Q1. Write a program to find all pairs of an integer array whose sum is equal to a given number?
+function pairs(arr, len, sum) {
+  for (let i = 0; i < len; i++) {
+    for (let j = i + 1; j < len; j++) {
+      if (arr[i] + arr[j] == sum) {
+        console.log("Pairs found" + " " + "(" + arr[i] + " , " + arr[j] + ")");
+      }
+    }
+  }
+}
+
+let arr = [8, 7, 2, 5, 3, 1];
+let arrLength = arr.length;
+let sum = 10;
+
+pairs(arr, arrLength, sum);
+
+// Q2. Write a program to reverse an array in place? In place means you cannot create a new array. You have to update the original array.
+
+function revarr1(arr, n) {
+  return arr.reverse();
+}
+
+let arr1 = [1, 2, 3, 4, 5];
+let n = arr1.length;
+arr1 = revarr1(arr1, n);
+console.log(arr1);
+
+// Q3. Write a program to check if two strings are a rotation of each other?
+
+function isRotation(a, b) {
+  var n = a.length;
+  var m = b.length;
+  if (n != m) return false;
+  var lps = Array.from({ length: n }, (_, i) => 0);
+  var len = 0;
+  var i = 1;
+  lps[0] = 0;
+  while (i < n) {
+    if (a.charAt(i) == b.charAt(len)) {
+      lps[i] = ++len;
+      ++i;
+    } else {
+      if (len == 0) {
+        lps[i] = 0;
+        ++i;
+      } else {
+        len = lps[len - 1];
+      }
+    }
+  }
+
+  i = 0;
+  for (k = lps[n - 1]; k < m; ++k) {
+    if (b.charAt(k) != a.charAt(i++)) return false;
+  }
+  return true;
+}
+
+var s1 = "ABACD";
+var s2 = "CDABA";
+console.log(isRotation(s1, s2) ? "They are rotation" : "They are not rotation");
+
+// Q4. Write a program to print the first non-repeated character from a string?
+
+function firstNonRepeat(str) {
+  var arra1 = str.split("");
+  var result = "";
+  var ctr = 0;
+
+  for (var x = 0; x < arra1.length; x++) {
+    ctr = 0;
+
+    for (var y = 0; y < arra1.length; y++) {
+      if (arra1[x] === arra1[y]) {
+        ctr += 1;
+      }
+    }
+
+    if (ctr < 2) {
+      result = arra1[x];
+      break;
+    }
+  }
+  return result;
+}
+console.log(firstNonRepeat("abacddbec"));
+
+// Q5.  Read about the Tower of Hanoi algorithm. Write a program to implement it.
+
+function hanoi(height, srcP, desP, bufferP) {
+  const han = [];
+  if (height >= 1) {
+    hanoi(height - 1, srcP, bufferP, desP);
+
+    console.log(srcP, " to", desP);
+
+    hanoi(height - 1, bufferP, desP, srcP);
+  }
+  han.push(desP);
+  return;
+}
+
+hanoi(3, "1", "2", "3");
+
+// Q6. Read about infix, prefix, and postfix expressions. Write a program to convert postfix to prefix expression.
+
+function isOperator(x) {
+  switch (x) {
+    case "+":
+    case "-":
+    case "/":
+    case "*":
+      return true;
+  }
+  return false;
+}
+
+function postToPre(post_exp) {
+  let s = [];
+  let length = post_exp.length;
+  for (let i = 0; i < length; i++) {
+    if (isOperator(post_exp[i])) {
+      let op1 = s[s.length - 1];
+      s.pop();
+      let op2 = s[s.length - 1];
+      s.pop();
+      let temp = post_exp[i] + op2 + op1;
+      s.push(temp);
+    } else {
+      s.push(post_exp[i] + "");
+    }
+  }
+
+  let ans = "";
+  while (s.length > 0) ans += s.pop();
+  return ans;
+}
+
+let post_exp = "ABC/-AK/L-*";
+
+console.log("Prefix : " + postToPre(post_exp));
+
+// Q7. Write a program to convert prefix expression to infix expression.
+
+function isOperator(x) {
+  switch (x) {
+    case "+":
+    case "-":
+    case "/":
+    case "*":
+      return true;
+  }
+  return false;
+}
+
+function pretoIn(x) {
+  let stack = [];
+  let l = x.length;
+  for (let i = l-1; i >=0; i--) {
+    if (!isOperator(x[i])) {
+      stack.push(x[i]);
+      i -= 1;
+    } else {
+      str = "(" + stack.pop() + x[i] + stack.pop() + ")";
+      stack.push(str);
+    }
+  }
+  let ans = "";
+  while (stack.length > 0) ans += stack.pop();
+  return ans;
+}
+
+
+
+let str = "*-A/BC-/AKL";
+console.log(pretoIn(str));
+
+// Q8. Write a program to check if all the brackets are closed in a given code snippet.
+
+function areBracketsBalanced(expr) {
+  let stack = [];
+  for (let i = 0; i < expr.length; i++) {
+    let x = expr[i];
+
+    if (x == "(" || x == "[" || x == "{") {
+      stack.push(x);
+      continue;
+    }
+    if (stack.length == 0) return false;
+
+    let check;
+    switch (x) {
+      case ")":
+        check = stack.pop();
+        if (check == "{" || check == "[") return false;
+        break;
+
+      case "}":
+        check = stack.pop();
+        if (check == "(" || check == "[") return false;
+        break;
+
+      case "]":
+        check = stack.pop();
+        if (check == "(" || check == "{") return false;
+        break;
+    }
+  }
+  return stack.length == 0;
+}
+let expr = "([{}])";
+if (areBracketsBalanced(expr)) console.log("Balanced ");
+else console.log("Not Balanced ");
+
+// Q9. Write a program to reverse a stack.
+
+let st = [];
+function insert_at_bottom(x) {
+  if (st.length == 0) st.push(x);
+  else {
+    let a = st.pop();
+    insert_at_bottom(x);
+    st.push(a);
+  }
+}
+function reverse() {
+  if (st.length > 0) {
+    let x = st.pop();
+    reverse();
+    insert_at_bottom(x);
+  }
+}
+
+st.push("1");
+st.push("2");
+st.push("3");
+st.push("4");
+
+reverse();
+
+console.log(st.join(" "));
+
+// Q10.  Write a program to find the smallest number using a stack.
+
+function smallestNumber(arr, arr_size) {
+  let i, first, second;
+  if (arr_size < 2) {
+    console.log(" Invalid Input ");
+    return;
+  }
+
+  first = Number.MAX_VALUE;
+  second = Number.MAX_VALUE;
+  for (i = 0; i < arr_size; i++) {
+    if (arr[i] < first) {
+      second = first;
+      first = arr[i];
+    } else if (arr[i] < second && arr[i] != first) second = arr[i];
+  }
+
+  console.log("Smallest Number : " + first);
+}
+
+let arr2 = [];
+function enQueue(va) {
+  arr2.push(va);
+}
+enQueue(10);
+enQueue(21);
+enQueue(5);
+enQueue(8);
+enQueue(13);
+let n1 = arr.length;
+smallestNumber(arr2, n1);
+console.log(arr2);
